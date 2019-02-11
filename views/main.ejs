@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%=title %></title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body> 
+
+    <div class="container" style="margin-bottom: 80px">
+        <h2>Input task data</h2>
+        <form enctype="multipart/form-data" action="/add" method="post">
+            <div class="form-group">
+                <label for="text">Name:</label>
+                <input type="text" class="form-control" id="text" placeholder="Enter name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="text">Completion Date:</label>
+                <input type="date" class="form-control" id="text" placeholder="Enter completion date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="text">Attachment:</label>
+                <input type="file" name="filename">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        </form>
+    </div>  
+    
+    <div class="container">
+        <div class="justify-content-center align-items-center">
+            <form action="/show" method="post">
+                <label class="checkbox-inline">
+                    <input type="checkbox" value ="true" name="completedCheck" checked>Completed Tasks
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value ="true" name="notCompletedCheck" checked>Not Completed Tasks
+                </label>
+                <button type="submit" class="btn btn-primary mb-2">Show</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Current Tasks</h2>        
+        <table class="table table-hover ">
+            <thead>
+                <tr>
+                <th>Task Name</th>
+                <th>Completion Date</th>
+                <th>IsComplete</th>
+                <th>Attachment</th>
+                <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0; i<tasks.length;i++) {%>
+                    <tr>
+                        <td><%=tasks[i].name %></td>
+                        <td><%=tasks[i].date %></td>  
+                        <td><%=tasks[i].isComplete %></td> 
+                        <% if(tasks[i].filename === "") {%>                              
+                            <td>None</td> 
+                        <% }else {%>
+                            <td><%=tasks[i].filename %></td>
+                        <%} %>
+                        <td>
+                            <div>
+                                <form action="/delete" method="post">                              
+                                    <button type="submit" class="btn btn-danger pull-right">Delete</button>
+                                    <input type="hidden" name="id" value=<%=tasks[i].id %> >
+                                </form>
+                            </div>
+                            <div>  
+                                <form action="/complete" method="post">  
+                                    <% if(tasks[i].isComplete) {%>                              
+                                        <button type="submit" class="btn btn-primary mb-2 pull-right" disabled="disabled">Complete</button>
+                                    <% }else {%>
+                                        <button type="submit" class="btn btn-primary mb-2 pull-right">Complete</button>
+                                    <%} %>
+                                    <input type="hidden" name="id" value=<%=tasks[i].id %> >
+                                </form>
+                            </div>
+                        </td>           
+                    </tr>
+                <%} %>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+<html>
